@@ -134,6 +134,7 @@ void alc_alsa_init(BackendFuncs *func_list);
 void alc_oss_init(BackendFuncs *func_list);
 void alcDSoundInit(BackendFuncs *func_list);
 void alcWinMMInit(BackendFuncs *FuncList);
+void alcPulseAudioInit(BackendFuncs *func_list);
 void alc_wave_init(BackendFuncs *func_list);
 
 

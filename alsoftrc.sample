@@ -56,7 +56,7 @@ drivers =  # Sets the backend driver list order, comma-seperated. Unknown
            # backends and duplicated names are ignored, and unlisted backends
            # won't be considered for use. An empty list means the default.
            # Default is:
-           # alsa,oss,dsound,winmm,wave
+           # alsa,oss,dsound,winmm,pulseaudio,wave
 
 [alsa]  # ALSA backend stuff
 device = default  # Sets the device name for the default playback device.

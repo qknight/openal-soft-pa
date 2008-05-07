@@ -13,6 +13,9 @@
 /* Define if we have the Windows Multimedia backend */
 #cmakedefine HAVE_WINMM
 
+/* Define if we have the pulseaudio backend */
+#cmakedefine HAVE_PULSEAUDIO
+
 /* Define if we have dlfcn.h */
 #cmakedefine HAVE_DLFCN_H
 

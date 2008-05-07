@@ -15,10 +15,11 @@ PROJECT(OpenAL)
 SET(CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS TRUE)
 
 
-OPTION(ALSA    "Check for ALSA backend"                ON)
-OPTION(OSS     "Check for OSS backend"                 ON)
-OPTION(DSOUND  "Check for DirectSound backend"         ON)
-OPTION(WINMM   "Check for Windows Multimedia backend"  ON)
+OPTION(ALSA         "Check for ALSA backend"                ON)
+OPTION(PULSEAUDIO   "Check for PULSEAUDIO backend"          ON)
+OPTION(OSS          "Check for OSS backend"                 ON)
+OPTION(DSOUND       "Check for DirectSound backend"         ON)
+OPTION(WINMM        "Check for Windows Multimedia backend"  ON)
 
 OPTION(DLOPEN  "Check for the dlopen API for loading optional libs"  ON)
 
@@ -281,6 +282,29 @@ IF(HAVE_WINDOWS_H)
         ENDIF()
     ENDIF()
 ENDIF()
+
+# Check PULSEAUDIO backend
+IF(PULSEAUDIO)
+# FIXME see the comment below
+#13:13 <+KittyCat> I guess, PKGCONFIG(libpulse "" "" "" PACFLAGS)
+#13:13 <+KittyCat> then add PACFLAGS to the current cflags
+#13:14 <+KittyCat> you shouldn't need to set EXTRA_LIBS. the lib should be loaded dynamicly
+# in future we can include a better detection of pulseaudio libs/includes
+# the default pulseaudio installation used -lpulse with no special include dir
+# since the includes are installed in /usr/includes/
+#       pkg-config libpulse --libs
+#       pkg-config libpulse --cflags
+# http://svn.gna.org/svn/wormux/trunk/cmake/UsePkgConfig.cmake
+  CHECK_INCLUDE_FILE(pulse/pulseaudio.h HAVE_PULSE_PULSE_H)
+    IF(HAVE_PULSE_PULSE_H)
+      SET(HAVE_PULSEAUDIO 1)
+      SET(ALC_OBJS  ${ALC_OBJS} Alc/pulseaudio.c)
+      SET(BACKENDS  "${BACKENDS} PulseAudio,")
+      SET(EXTRA_LIBS -lpulse ${EXTRA_LIBS})
+    ENDIF()
+ENDIF()
+
+
 
 # This is always available
 SET(BACKENDS  "${BACKENDS} WaveFile")

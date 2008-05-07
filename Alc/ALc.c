@@ -63,6 +63,9 @@ static struct {
 #ifdef HAVE_WINMM
     { "winmm", alcWinMMInit, EmptyFuncs },
 #endif
+#ifdef HAVE_PULSEAUDIO
+    { "pulseaudio", alcPulseAudioInit, EmptyFuncs },
+#endif
 
     { "wave", alc_wave_init, EmptyFuncs },
 
