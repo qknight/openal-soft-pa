@@ -31,7 +31,10 @@
 ** if you want to try the pulseaudio backend or if you want to help improving it:
 **  git clone http://lastlog.de/git/openal-soft-pulseaudio
 **
-** Once you compiled the library you can test it without having to install it. 
+** you need to fix ~/.openalrc to make it use pulse instead of alsa,sdl or null... whatever
+** see alsoftrc.sample
+**
+** Once you compiled the library you can test it without having to install it.
 ** 'cd' into the directory containing libopenal.so and then simply do:
 **   export LD_LIBRARY_PATH=.:$LD_LIBRARY_PATH
 **   ln -s libopenal.so libopenal.so.0
@@ -49,7 +52,7 @@
 ** Now you can launch you application from this terminal using the local library.
 ** NOTE: this change is only temporary. To make it permanent copy this library 'over'
 **       the library found in /usr/lib/  (see the exact openal path in the first ldd output)
-** NOTE: if you want to test ut/ut2004 with pulseaudio you have to replace the 
+** NOTE: if you want to test ut/ut2004 with pulseaudio you have to replace the
 **       library (for instance) /opt/ut2004/System/openal.so with the one you just built.
 **
 ** once the code is stable and all TODOs are removed it's hopefully merged into openal-soft
@@ -347,6 +350,12 @@ static void context_state_callback(pa_context *c, void *userdata) {
 
 static ALCboolean PulseAudioOpenPlayback(ALCdevice *device, const ALCchar *deviceName) {
     AL_PRINT("alcPulseAudio PulseAudioOpenPlayback\n");
+//     16:28 < mathrick> what's glitch free?
+//     16:29 < mezcalero> qknight: pa_get_binary_name()
+//     16:29 < mezcalero> qknight: it's actually exported
+//     16:29 < mezcalero> qknight: so you can use it in your clients
+//     16:29 < mezcalero> uses /proc/self/exe and PR_GET_NAME on linux
+//     16:29 < mezcalero> GetModuleFileName() on windows
 
     //FIXME this code is linuxonly and needs to be handled like that
     FILE* input = fopen("/proc/self/cmdline","r");
@@ -484,7 +493,7 @@ static ALCboolean PulseAudioOpenPlayback(ALCdevice *device, const ALCchar *devic
     printf("%i fragsize\n", attr.fragsize);
 
     // latency happens from this call
-    if (pa_stream_connect_playback(stream, NULL, NULL/*&attr*/, PA_STREAM_INTERPOLATE_TIMING|PA_STREAM_AUTO_TIMING_UPDATE, NULL, NULL) < 0) {
+    if (pa_stream_connect_playback(stream, NULL, /*NULL*/&attr, PA_STREAM_INTERPOLATE_TIMING|PA_STREAM_AUTO_TIMING_UPDATE, NULL, NULL) < 0) {
       printf("AO: [pulse] Failed to connect stream: %s\n", pa_strerror(pa_context_errno(context)));
       goto error_and_forced_exit;
     }
